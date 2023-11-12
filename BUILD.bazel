@@ -1,19 +1,19 @@
 cc_library(
-  name = "coro",
-  srcs = glob(["include/aid/**/*.hpp"]),
-  hdrs = glob(["include/aid/**/*.hpp"]),
-  strip_include_prefix = "include",
-  visibility = ["//visibility:public"],
+    name = "async",
+    srcs = glob(["include/aid/**/*.hpp"]),
+    hdrs = glob(["include/aid/**/*.hpp"]),
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
 )
 
 cc_test(
-  name = "tests",
-  srcs = glob([
-    "tests/*.cpp",
-  ]),
-  deps = [
-    ":coro",
-    "@catch2",
-    "@catch2//:catch2_main"
-  ],
+    name = "tests",
+    srcs = glob([
+        "tests/*.cpp",
+    ]),
+    deps = [
+        ":async",
+        "@catch2",
+        "@catch2//:catch2_main",
+    ],
 )
