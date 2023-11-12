@@ -1,0 +1,23 @@
+build --force_pic
+
+common --enable_bzlmod
+common --experimental_cc_shared_library
+common --enable_platform_specific_config
+
+build --dynamic_mode=off
+
+build --experimental_guard_against_concurrent_changes
+
+build:linux --cxxopt=-std=c++20 --host_cxxopt=-std=c++20
+build:macos --cxxopt=-std=c++20 --host_cxxopt=-std=c++20
+build:windows --cxxopt=/std:c++20 --host_cxxopt=/std:c++20
+
+build:clang --repo_env=CC=clang
+build:clang --repo_env=CXX=clang++
+
+build:mold --linkopt=-fuse-ld=mold --host_linkopt=-fuse-ld=mold
+build:lld --linkopt=-fuse-ld=lld --host_linkopt=-fuse-ld=lld
+
+test:ci --verbose_failures=true
+
+try-import %workspace%/user.bazelrc
