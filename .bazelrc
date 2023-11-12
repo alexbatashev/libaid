@@ -18,6 +18,7 @@ build:clang --repo_env=CXX=clang++
 build:mold --linkopt=-fuse-ld=mold --host_linkopt=-fuse-ld=mold
 build:lld --linkopt=-fuse-ld=lld --host_linkopt=-fuse-ld=lld
 
+build:ci --config=mold
 test:ci --verbose_failures=true
 
 try-import %workspace%/user.bazelrc
