@@ -1,20 +1,19 @@
 #pragma once
 
-#include <type_traits>
 #include <coroutine>
 #include <exception>
+#include <type_traits>
 
 namespace aid {
 namespace detail {
-template <typename T>
-struct yield_traits {
-  using type = std::conditional_t<(sizeof(T) > sizeof(void*)), T*, T>;
+template <typename T> struct yield_traits {
+  using type = std::conditional_t<(sizeof(T) > sizeof(void *)), T *, T>;
 
   static constexpr bool is_byref() noexcept {
-    return sizeof(T) > sizeof(void*);
+    return sizeof(T) > sizeof(void *);
   }
 };
-}
+} // namespace detail
 template <typename T> class [[nodiscard]] generator {
 public:
   struct promise_type;
@@ -63,7 +62,7 @@ public:
 
     void return_void() {}
 
-    auto yield_value(T&& x) {
+    auto yield_value(T &&x) {
       if constexpr (detail::yield_traits<T>::is_byref()) {
         mCurrentValue = std::addressof(x);
       } else {
@@ -86,11 +85,11 @@ public:
     constexpr iterator() noexcept = default;
     constexpr iterator(handle_type handle) : mHandle(handle) {}
 
-    const T &operator*() const { 
+    const T &operator*() const {
       if constexpr (detail::yield_traits<T>::is_byref()) {
-        return *mHandle.promise().mCurrentValue; 
+        return *mHandle.promise().mCurrentValue;
       } else {
-        return mHandle.promise().mCurrentValue; 
+        return mHandle.promise().mCurrentValue;
       }
     }
 
@@ -132,4 +131,4 @@ public:
 private:
   handle_type mHandle;
 };
-}
+} // namespace aid
