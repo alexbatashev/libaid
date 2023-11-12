@@ -1,6 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 
-#include "aid/coro/generator.hpp"
+#include "aid/async/generator.hpp"
 
 aid::generator<int> generate_ints() {
   co_yield 1;

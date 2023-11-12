@@ -34,6 +34,7 @@
 .vscode
 .idea
 .cache
+.clwb
 bazel-*
 
 user.bazelrc
