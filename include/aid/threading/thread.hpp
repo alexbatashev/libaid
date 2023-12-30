@@ -4,7 +4,6 @@
 #include "aid/container/thread_safe_queue.hpp"
 #include "aid/threading/task.hpp"
 
-#include <iostream>
 #include <thread>
 
 namespace aid {

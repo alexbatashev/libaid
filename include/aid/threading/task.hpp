@@ -26,8 +26,7 @@
 #include "aid/threading/sync_task.hpp"
 
 #include <coroutine>
-
-#include <iostream>
+#include <variant>
 
 namespace aid {
 template <typename Value> class task;

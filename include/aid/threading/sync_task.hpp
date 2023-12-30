@@ -26,7 +26,6 @@
 #include "aid/async/detail/event.hpp"
 
 #include <coroutine>
-#include <iostream>
 
 namespace aid {
 template <typename Value> class sync_task;
