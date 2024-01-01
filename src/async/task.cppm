@@ -21,12 +21,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#pragma once
-
-#include "aid/threading/sync_task.hpp"
+module;
 
 #include <coroutine>
 #include <variant>
+
+module export aid.async:task;
+
+import :sync_task;
 
 namespace aid {
 template <typename Value> class task;
@@ -108,7 +110,7 @@ private:
 };
 } // namespace detail
 
-template <typename Value = void> class [[nodiscard]] task {
+export template <typename Value = void> class [[nodiscard]] task {
 public:
   using promise_type = detail::task_promise<Value>;
   using value_type = Value;
@@ -208,7 +210,7 @@ make_sync_task(task<Value> &&t) {
 }
 } // namespace detail
 
-template <typename Value> inline decltype(auto) sync_wait(task<Value> &&t) {
+export template <typename Value> inline decltype(auto) sync_wait(task<Value> &&t) {
   detail::event evt;
   auto sync = detail::make_sync_task(std::forward<task<Value>>(t));
   sync.start(evt);

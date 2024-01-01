@@ -1,6 +1,8 @@
-#pragma once
+module;
 
-namespace aid {
+export module aid.threading:lock;
+
+export namespace aid {
 template <typename T>
 concept lockable = requires(T m) {
                      { m.lock() };

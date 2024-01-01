@@ -1,0 +1,15 @@
+load("@rules_cpp//cpp:rules.bzl", "cpp_module")
+
+cpp_module(
+    name = "lock",
+    module_name = "aid.async:lock",
+    interface = "lock.cppm",
+)
+
+cpp_module(
+    name = "async",
+    module_name = "aid.async",
+    interface = "interface.cppm",
+    deps = [":lock"],
+    visibility = ["//visibility:public"],
+)

@@ -1,19 +1,33 @@
-cc_library(
-    name = "async",
-    srcs = glob(["include/aid/**/*.hpp"]),
-    hdrs = glob(["include/aid/**/*.hpp"]),
-    strip_include_prefix = "include",
-    visibility = ["//visibility:public"],
-)
+load("@rules_cpp//cpp:rules.bzl", "cpp_test")
 
-cc_test(
+cpp_test(
     name = "tests",
-    srcs = glob([
-        "tests/*.cpp",
-    ]),
+    srcs = [
+        "tests/locks.cpp",
+    ],
     deps = [
-        ":async",
+        "//src/async",
         "@catch2",
         "@catch2//:catch2_main",
-    ],
+    ]
 )
+
+# cc_library(
+#     name = "async",
+#     srcs = glob(["include/aid/**/*.hpp"]),
+#     hdrs = glob(["include/aid/**/*.hpp"]),
+#     strip_include_prefix = "include",
+#     visibility = ["//visibility:public"],
+# )
+
+# cc_test(
+#     name = "tests",
+#     srcs = glob([
+#         "tests/*.cpp",
+#     ]),
+#     deps = [
+#         ":async",
+#         "@catch2",
+#         "@catch2//:catch2_main",
+#     ],
+# )

@@ -1,3 +1,21 @@
 module(name = "aid")
 
 bazel_dep(name = "catch2", version = "3.4.0")
+bazel_dep(name = "rules_cpp", version = "0.0.0")
+
+git_override(
+    module_name = "rules_cpp",
+    remote = "https://github.com/alexbatashev/rules_cpp",
+    commit = "e5d5eed2944a53dee4b3bd6144f5614a533cb288"
+)
+
+cpp = use_extension("@rules_cpp//cpp:extension.bzl", "cpp")
+cpp.llvm(
+    name = "llvm-17",
+    version = "17.0.6",
+)
+use_repo(cpp, "llvm-17")
+
+register_toolchains("@llvm-17//:toolchain-linux-x86_64")
+register_toolchains("@llvm-17//:toolchain-macos-x86_64")
+register_toolchains("@llvm-17//:toolchain-macos-aarch64")

@@ -21,13 +21,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#pragma once
-
-#include "aid/async/detail/event.hpp"
+module;
 
 #include <coroutine>
 
-namespace aid {
+export module aid.async:sync_task;
+
+import :manual_event;
+
+export namespace aid {
 template <typename Value> class sync_task;
 
 namespace detail {
@@ -130,7 +132,7 @@ private:
 };
 } // namespace detail
 
-template <typename Value> class sync_task final {
+export template <typename Value> class sync_task final {
 public:
   using promise_type = detail::sync_task_promise<Value>;
   using coro_handle_t = std::coroutine_handle<promise_type>;

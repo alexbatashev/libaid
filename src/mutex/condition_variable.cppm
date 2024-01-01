@@ -1,13 +1,15 @@
-#pragma once
-
-#include "aid/async/exclusive.hpp"
+module;
 
 #include <condition_variable>
 #include <mutex>
 #include <thread>
 
+export module aid.mutex:condition_variable;
+
+import :exclusive;
+
 namespace aid {
-template <typename T>
+export template <typename T>
 class condition_variable : public exclusive<T, std::mutex> {
 private:
   using super = exclusive<T, std::mutex>;

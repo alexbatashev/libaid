@@ -1,13 +1,13 @@
-#pragma once
-
-#include "aid/async/detail/backoff.hpp"
-#include "aid/container/thread_safe_queue.hpp"
-#include "aid/threading/task.hpp"
+module;
 
 #include <thread>
 
+export module aid.threading:thread;
+
+import aid.containers:thread_safe_queue;
+
 namespace aid {
-class thread {
+export class thread {
 public:
   thread() {
     mThread = std::jthread([this](std::stop_token token) {

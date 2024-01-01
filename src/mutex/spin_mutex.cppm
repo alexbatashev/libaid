@@ -1,17 +1,19 @@
-#pragma once
+module;
 
 #include <atomic>
 
-#include "aid/async/detail/backoff.hpp"
+export module aid.mutex:spin_mutex;
+
+import aid.utils:backoff;
 
 namespace aid {
 /// spin_mutex is a synchronization primitive, that uses atomic variable and
 /// causes thread trying acquire lock wait in loop while repeatedly check if
 /// the lock is available.
-class spin_mutex {
+export class spin_mutex {
 public:
   void lock() {
-    detail::backoff b;
+    backoff b;
     while (mLock.test_and_set(std::memory_order_acquire))
       b.pause();
   }

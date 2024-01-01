@@ -1,12 +1,14 @@
-#pragma once
-
-#include "aid/async/condition_variable.hpp"
+module;
 
 #include <list>
 #include <optional>
 
+export module aid.containers:thread_safe_queue;
+
+import aid.mutex:condition_variable;
+
 namespace aid {
-template <typename T> class thread_safe_queue {
+export template <typename T> class thread_safe_queue {
 public:
   thread_safe_queue() : mQueue(std::list<T>()) {}
   void push(T value) {
