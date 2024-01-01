@@ -6,7 +6,7 @@ bazel_dep(name = "rules_cpp", version = "0.0.0")
 git_override(
     module_name = "rules_cpp",
     remote = "https://github.com/alexbatashev/rules_cpp",
-    commit = "6ec7a02dc7381624f0eebc93cc82349c7182e184"
+    commit = "91312c4e4c94802376c123b1938ae2bc12450fa7"
 )
 
 cpp = use_extension("@rules_cpp//cpp:extension.bzl", "cpp")
