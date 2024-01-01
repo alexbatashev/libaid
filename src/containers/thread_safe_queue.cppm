@@ -5,7 +5,7 @@ module;
 
 export module aid.containers:thread_safe_queue;
 
-import aid.mutex:condition_variable;
+import aid.mutex;
 
 namespace aid {
 export template <typename T> class thread_safe_queue {
@@ -53,7 +53,7 @@ public:
     return ret;
   }
 
-  void wait(std::stop_token token) {
+  template <typename ST> void wait(ST /*std::stop_token*/ token) {
     const auto hasElement = [](const auto &queue) { return !queue.empty(); };
 
     mQueue.wait(hasElement, token);

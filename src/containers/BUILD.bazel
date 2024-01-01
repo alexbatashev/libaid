@@ -1,0 +1,25 @@
+load("@rules_cpp//cpp:rules.bzl", "cpp_module")
+
+cpp_module(
+    name = "thread_safe_queue",
+    module_name = "aid.containers:thread_safe_queue",
+    interface = "thread_safe_queue.cppm",
+    deps = [
+        "//src/mutex",
+        "//src/utils",
+    ]
+)
+
+cpp_module(
+    name = "containers",
+    module_name = "aid.containers",
+    interface = "interface.cppm",
+    partitions = [
+        ":thread_safe_queue",
+    ],
+    deps = [
+        "//src/utils",
+        "//src/mutex",
+    ],
+    visibility = ["//visibility:public"],
+)

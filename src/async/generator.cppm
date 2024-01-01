@@ -4,7 +4,7 @@ module;
 #include <exception>
 #include <type_traits>
 
-module export aid.async:generator;
+export module aid.async:generator;
 
 namespace aid {
 namespace detail {

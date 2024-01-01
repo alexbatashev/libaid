@@ -1,10 +1,9 @@
 module;
 
-
 #include <functional>
 #include <mutex>
 
-module export aid.mutex:exclusive;
+export module aid.mutex:exclusive;
 
 import :lock;
 

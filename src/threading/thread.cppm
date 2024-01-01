@@ -1,10 +1,13 @@
 module;
 
+#define _LIBCPP_ENABLE_EXPERIMENTAL 1
+
+#include <coroutine>
 #include <thread>
 
 export module aid.threading:thread;
 
-import aid.containers:thread_safe_queue;
+import aid.containers;
 
 namespace aid {
 export class thread {

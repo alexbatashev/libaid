@@ -2,6 +2,7 @@ module;
 
 #include <condition_variable>
 #include <mutex>
+#include <stop_token>
 #include <thread>
 
 export module aid.mutex:condition_variable;
@@ -27,7 +28,8 @@ public:
     });
   }
 
-  template <typename F> void wait(F &&f, std::stop_token token) {
+  template <typename F, typename ST>
+  void wait(F &&f, ST /*std::stop_token*/ token) {
     std::unique_lock lock{super::mMutex};
     mCV.wait(lock, token, [&, this]() {
       return std::invoke(std::forward<F>(f), super::mValue);

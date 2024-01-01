@@ -23,14 +23,16 @@
 
 module;
 
+#include <cassert>
 #include <coroutine>
+#include <exception>
 
 export module aid.async:sync_task;
 
 import :manual_event;
 
-export namespace aid {
-template <typename Value> class sync_task;
+namespace aid {
+export template <typename Value> class sync_task;
 
 namespace detail {
 template <typename Value> class sync_task_promise final {
@@ -41,7 +43,7 @@ public:
 
   sync_task_promise() noexcept = default;
 
-  void start(detail::event &event) {
+  void start(manual_event &event) {
     mEvent = &event;
     coro_handle_t::from_promise(*this).resume();
   }
@@ -82,7 +84,7 @@ public:
   }
 
 private:
-  detail::event *mEvent;
+  manual_event *mEvent;
   std::remove_reference_t<Value> *mResult;
   std::exception_ptr mException;
 };
@@ -93,7 +95,7 @@ template <> class sync_task_promise<void> {
 public:
   sync_task_promise() noexcept = default;
 
-  void start(detail::event &event) {
+  void start(manual_event &event) {
     mEvent = &event;
     coro_handle_t::from_promise(*this).resume();
   }
@@ -127,7 +129,7 @@ public:
   }
 
 private:
-  detail::event *mEvent;
+  manual_event *mEvent;
   std::exception_ptr mException;
 };
 } // namespace detail
@@ -151,7 +153,7 @@ public:
   sync_task(const sync_task &) = delete;
   sync_task &operator=(const sync_task &) = delete;
 
-  void start(detail::event &event) noexcept { mHandle.promise().start(event); }
+  void start(manual_event &event) noexcept { mHandle.promise().start(event); }
 
   decltype(auto) result() { return mHandle.promise().result(); }
 

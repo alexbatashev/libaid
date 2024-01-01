@@ -3,31 +3,18 @@ load("@rules_cpp//cpp:rules.bzl", "cpp_test")
 cpp_test(
     name = "tests",
     srcs = [
+        "tests/generator.cpp",
         "tests/locks.cpp",
+        "tests/thread_safe_queue.cpp",
+        # "tests/thread_pool.cpp",
     ],
     deps = [
         "//src/async",
+        "//src/mutex",
+        "//src/utils",
+        "//src/containers",
+        # "//src/threading",
         "@catch2",
         "@catch2//:catch2_main",
     ]
 )
-
-# cc_library(
-#     name = "async",
-#     srcs = glob(["include/aid/**/*.hpp"]),
-#     hdrs = glob(["include/aid/**/*.hpp"]),
-#     strip_include_prefix = "include",
-#     visibility = ["//visibility:public"],
-# )
-
-# cc_test(
-#     name = "tests",
-#     srcs = glob([
-#         "tests/*.cpp",
-#     ]),
-#     deps = [
-#         ":async",
-#         "@catch2",
-#         "@catch2//:catch2_main",
-#     ],
-# )

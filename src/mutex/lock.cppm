@@ -1,6 +1,6 @@
 module;
 
-export module aid.threading:lock;
+export module aid.mutex:lock;
 
 export namespace aid {
 template <typename T>

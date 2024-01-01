@@ -26,12 +26,13 @@ module;
 #include <coroutine>
 #include <variant>
 
-module export aid.async:task;
+export module aid.async:task;
 
 import :sync_task;
+import :manual_event;
 
 namespace aid {
-template <typename Value> class task;
+export template <typename Value> class task;
 
 namespace detail {
 class task_promise_base {
@@ -211,7 +212,7 @@ make_sync_task(task<Value> &&t) {
 } // namespace detail
 
 export template <typename Value> inline decltype(auto) sync_wait(task<Value> &&t) {
-  detail::event evt;
+  manual_event evt;
   auto sync = detail::make_sync_task(std::forward<task<Value>>(t));
   sync.start(evt);
   evt.wait();
