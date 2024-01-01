@@ -1,12 +1,12 @@
 #include <catch2/catch_test_macros.hpp>
 
-#include "aid/threading/task.hpp"
-#include "aid/threading/thread_pool.hpp"
-
 #include <chrono>
 #include <future>
 #include <mutex>
 #include <thread>
+
+import aid.threading;
+import aid.async;
 
 TEST_CASE("Create default thread pool", "[thread_pool]") {
   aid::thread_pool tp;

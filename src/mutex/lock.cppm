@@ -1,6 +1,8 @@
-#pragma once
+module;
 
-namespace aid {
+export module aid.mutex:lock;
+
+export namespace aid {
 template <typename T>
 concept lockable = requires(T m) {
                      { m.lock() };

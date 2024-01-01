@@ -1,4 +1,4 @@
-#pragma once
+module;
 
 #if defined(__has_include) && __has_include(<immintrin.h>) && defined(__x86_64__)
 #define HAS_PAUSE
@@ -7,7 +7,9 @@
 
 #include <thread>
 
-namespace aid::detail {
+export module aid.utils;
+
+export namespace aid {
 class backoff {
 public:
   void pause() {
@@ -31,4 +33,4 @@ private:
   static constexpr uint32_t LOOPS_BEFORE_YIELD = 16;
   uint32_t mCount = 1;
 };
-} // namespace aid::detail
+} // namespace aid

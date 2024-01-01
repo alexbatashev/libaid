@@ -1,6 +1,8 @@
 #include <catch2/catch_test_macros.hpp>
 
-#include "aid/container/thread_safe_queue.hpp"
+#include <list>
+
+import aid.containers;
 
 TEST_CASE("Basic methods work", "[thread_safe_queue]") {
   aid::thread_safe_queue<int> q;

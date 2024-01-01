@@ -1,8 +1,10 @@
-#pragma once
+module;
 
 #include <coroutine>
 #include <exception>
 #include <type_traits>
+
+export module aid.async:generator;
 
 namespace aid {
 namespace detail {
@@ -14,7 +16,7 @@ template <typename T> struct yield_traits {
   }
 };
 } // namespace detail
-template <typename T> class [[nodiscard]] generator {
+export template <typename T> class [[nodiscard]] generator {
 public:
   struct promise_type;
   using handle_type = std::coroutine_handle<promise_type>;

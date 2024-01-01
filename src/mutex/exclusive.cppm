@@ -1,12 +1,14 @@
-#pragma once
-
-#include "aid/async/lock.hpp"
+module;
 
 #include <functional>
 #include <mutex>
 
+export module aid.mutex:exclusive;
+
+import :lock;
+
 namespace aid {
-template <typename Value, lockable Impl> class exclusive {
+export template <typename Value, lockable Impl> class exclusive {
 public:
   explicit exclusive(Value &&value) : mValue(std::forward<Value>(value)) {}
 

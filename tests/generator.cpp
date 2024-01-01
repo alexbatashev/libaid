@@ -1,6 +1,8 @@
 #include <catch2/catch_test_macros.hpp>
+#include <coroutine>
+#include <vector>
 
-#include "aid/async/generator.hpp"
+import aid.async;
 
 aid::generator<int> generate_ints() {
   co_yield 1;

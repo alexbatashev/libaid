@@ -1,0 +1,27 @@
+load("@rules_cpp//cpp:rules.bzl", "cpp_module")
+
+cpp_module(
+    name = "thread",
+    module_name = "aid.containers:thread",
+    interface = "thread.cppm",
+    deps = [
+        "//src/containers",
+        "//src/mutex",
+        "//src/utils",
+    ]
+)
+
+cpp_module(
+    name = "threading",
+    module_name = "aid.threading",
+    interface = "interface.cppm",
+    partitions = [
+        ":thread",
+    ],
+    deps = [
+        "//src/containers",
+        "//src/utils",
+        "//src/mutex",
+    ],
+    visibility = ["//visibility:public"],
+)

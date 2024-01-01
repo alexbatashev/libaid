@@ -1,17 +1,19 @@
-#pragma once
+module;
 
 #include <atomic>
 
-#include "aid/async/detail/backoff.hpp"
+export module aid.mutex:spin_mutex;
+
+import aid.utils;
 
 namespace aid {
 /// spin_mutex is a synchronization primitive, that uses atomic variable and
 /// causes thread trying acquire lock wait in loop while repeatedly check if
 /// the lock is available.
-class spin_mutex {
+export class spin_mutex {
 public:
   void lock() {
-    detail::backoff b;
+    backoff b;
     while (mLock.test_and_set(std::memory_order_acquire))
       b.pause();
   }
@@ -22,12 +24,12 @@ private:
 };
 
 /// shared_spin_mutex is a synchronization primitive, that allows RW-locks.
-class shared_spin_mutex {
+export class shared_spin_mutex {
 public:
   static constexpr bool is_noexcept = true;
 
   void lock() noexcept {
-    for (detail::backoff b;; b.pause()) {
+    for (backoff b;; b.pause()) {
       uint32_t curState = mState.load(std::memory_order_relaxed);
       if (!(curState & BUSY)) {
         if (mState.compare_exchange_strong(curState, WRITER)) {
@@ -43,7 +45,7 @@ public:
   void unlock() noexcept { mState &= READERS; }
 
   void lock_shared() noexcept {
-    for (detail::backoff b;; b.pause()) {
+    for (backoff b;; b.pause()) {
       uint32_t curState = mState.load(std::memory_order_relaxed);
       if (!(curState & (WRITER | WRITER_PENDING))) {
         uint32_t oldState = mState.fetch_add(ONE_READER);
@@ -64,7 +66,7 @@ public:
     if ((curState & READERS) == ONE_READER || !(curState & WRITER_PENDING)) {
       if (mState.compare_exchange_strong(curState,
                                          curState | WRITER | WRITER_PENDING)) {
-        detail::backoff b;
+        backoff b;
         while ((mState.load(std::memory_order_relaxed) & READERS) !=
                ONE_READER) {
           b.pause();

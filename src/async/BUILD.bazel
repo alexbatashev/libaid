@@ -1,0 +1,40 @@
+load("@rules_cpp//cpp:rules.bzl", "cpp_module")
+
+cpp_module(
+    name = "generator",
+    module_name = "aid.async:generator",
+    interface = "generator.cppm",
+)
+
+cpp_module(
+    name = "manual_event",
+    module_name = "aid.async:manual_event",
+    interface = "manual_event.cppm",
+)
+
+cpp_module(
+    name = "sync_task",
+    module_name = "aid.async:sync_task",
+    interface = "sync_task.cppm",
+    deps = [":manual_event"],
+)
+
+cpp_module(
+    name = "task",
+    module_name = "aid.async:task",
+    interface = "task.cppm",
+    deps = [":sync_task", ":manual_event"],
+)
+
+cpp_module(
+    name = "async",
+    module_name = "aid.async",
+    interface = "interface.cppm",
+    partitions = [
+        ":generator",
+        ":manual_event",
+        ":sync_task",
+        ":task",
+    ],
+    visibility = ["//visibility:public"],
+)

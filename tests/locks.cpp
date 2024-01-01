@@ -1,10 +1,9 @@
 #include <catch2/catch_test_macros.hpp>
 
-#include "aid/async/lock.hpp"
-#include "aid/async/spin_mutex.hpp"
-
 #include <future>
 #include <mutex>
+
+import aid.mutex;
 
 template <aid::lockable M> void test_mutex() {
   {

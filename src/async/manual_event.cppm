@@ -1,9 +1,11 @@
-#pragma once
+module;
 
 #include <atomic>
 
-namespace aid::detail {
-class event {
+export module aid.async:manual_event;
+
+export namespace aid {
+class manual_event {
 public:
   void set() {
     mFlag.test_and_set();

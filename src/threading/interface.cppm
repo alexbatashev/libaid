@@ -1,12 +1,13 @@
-#pragma once
-
-#include "aid/async/spin_mutex.hpp"
-#include "aid/threading/thread.hpp"
+module;
 
 #include <thread>
 #include <vector>
 
-namespace aid {
+export module aid.threading;
+
+import :thread;
+
+export namespace aid {
 class thread_pool {
 public:
   thread_pool() : mThreads(std::thread::hardware_concurrency()) {}

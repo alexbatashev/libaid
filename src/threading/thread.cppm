@@ -1,13 +1,16 @@
-#pragma once
+module;
 
-#include "aid/async/detail/backoff.hpp"
-#include "aid/container/thread_safe_queue.hpp"
-#include "aid/threading/task.hpp"
+#define _LIBCPP_ENABLE_EXPERIMENTAL 1
 
+#include <coroutine>
 #include <thread>
 
+export module aid.threading:thread;
+
+import aid.containers;
+
 namespace aid {
-class thread {
+export class thread {
 public:
   thread() {
     mThread = std::jthread([this](std::stop_token token) {
