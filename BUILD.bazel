@@ -6,6 +6,8 @@ cpp_test(
         "tests/generator.cpp",
         "tests/locks.cpp",
         "tests/thread_safe_queue.cpp",
+        "tests/memory_resource.cpp",
+        "tests/vector.cpp",
         # "tests/thread_pool.cpp",
     ],
     deps = [
@@ -13,8 +15,9 @@ cpp_test(
         "//src/mutex",
         "//src/utils",
         "//src/containers",
+        "//src/memory",
         # "//src/threading",
         "@catch2",
         "@catch2//:catch2_main",
-    ]
+    ],
 )
