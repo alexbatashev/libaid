@@ -2,7 +2,7 @@ load("@rules_cpp//cpp:rules.bzl", "cpp_module")
 
 cpp_module(
     name = "utils",
-    module_name = "aid.utils",
     interface = "interface.cppm",
+    module_name = "aid.utils",
     visibility = ["//visibility:public"],
 )

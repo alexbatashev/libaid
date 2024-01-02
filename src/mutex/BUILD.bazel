@@ -2,43 +2,46 @@ load("@rules_cpp//cpp:rules.bzl", "cpp_module")
 
 cpp_module(
     name = "lock",
-    module_name = "aid.mutex:lock",
     interface = "lock.cppm",
+    module_name = "aid.mutex:lock",
 )
 
 cpp_module(
     name = "exclusive",
+    interface = "exclusive.cppm",
     module_name = "aid.mutex:exclusive",
     deps = [":lock"],
-    interface = "exclusive.cppm",
 )
 
 cpp_module(
     name = "condition_variable",
-    module_name = "aid.mutex:condition_variable",
     interface = "condition_variable.cppm",
-    deps = [":exclusive", ":lock"],
+    module_name = "aid.mutex:condition_variable",
+    deps = [
+        ":exclusive",
+        ":lock",
+    ],
 )
 
 cpp_module(
     name = "spin_mutex",
-    module_name = "aid.mutex:spin_mutex",
     interface = "spin_mutex.cppm",
+    module_name = "aid.mutex:spin_mutex",
     deps = ["//src/utils"],
 )
 
 cpp_module(
     name = "mutex",
-    module_name = "aid.mutex",
     interface = "interface.cppm",
+    module_name = "aid.mutex",
     partitions = [
         ":condition_variable",
         ":exclusive",
         ":lock",
         ":spin_mutex",
     ],
-    deps = [
-        "//src/utils"
-    ],
     visibility = ["//visibility:public"],
+    deps = [
+        "//src/utils",
+    ],
 )

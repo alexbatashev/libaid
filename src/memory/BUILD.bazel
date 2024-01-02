@@ -1,0 +1,17 @@
+load("@rules_cpp//cpp:rules.bzl", "cpp_module")
+
+cpp_module(
+    name = "memory_resource",
+    interface = "memory_resource.cppm",
+    module_name = "aid.memory:memory_resource",
+)
+
+cpp_module(
+    name = "memory",
+    interface = "interface.cppm",
+    module_name = "aid.memory",
+    partitions = [
+        ":memory_resource",
+    ],
+    visibility = ["//visibility:public"],
+)
