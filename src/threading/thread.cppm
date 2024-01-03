@@ -1,7 +1,5 @@
 module;
 
-#define _LIBCPP_ENABLE_EXPERIMENTAL 1
-
 #include <coroutine>
 #include <thread>
 
@@ -13,7 +11,7 @@ namespace aid {
 export class thread {
 public:
   thread() {
-    mThread = std::jthread([this](std::stop_token token) {
+    mThread = std::jthread([this](const std::stop_token &token) {
       while (!token.stop_requested()) {
         if (mTasks.empty())
           mTasks.wait(token);
