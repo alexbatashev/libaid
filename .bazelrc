@@ -12,5 +12,7 @@ build --experimental_guard_against_concurrent_changes
 
 build:ci --features=werror
 test:ci --verbose_failures=true
+test:ci --test_output=streamed
+test:ci --test_summary=detailed
 
 try-import %workspace%/user.bazelrc
