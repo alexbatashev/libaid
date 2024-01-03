@@ -1,7 +1,5 @@
 module;
 
-#define _LIBCPP_ENABLE_EXPERIMENTAL 1
-
 #include <coroutine>
 #include <thread>
 

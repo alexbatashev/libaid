@@ -1,9 +1,13 @@
 module;
 
+#include <cassert>
+#include <coroutine>
 #include <thread>
 #include <vector>
 
 export module aid.threading;
+
+import aid.mutex;
 
 import :thread;
 
