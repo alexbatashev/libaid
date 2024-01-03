@@ -28,12 +28,20 @@ public:
     });
   }
 
-  template <typename F, typename ST>
-  void wait(F &&f, ST /*std::stop_token*/ token) {
+  template <typename F>
+  void wait(F &&f, std::stop_token token) {
     std::unique_lock lock{super::mMutex};
+    #ifdef _LIBCPP_VERSION
+    // FIXME(alexbatashev): due to a bug in libc++, the stop_token is ignored.
+    using namespace std::literals;
+    mCV.wait_for(lock, token, 40ms, [&, this]() {
+      return std::invoke(std::forward<F>(f), super::mValue);
+    });
+    #else
     mCV.wait(lock, token, [&, this]() {
       return std::invoke(std::forward<F>(f), super::mValue);
     });
+    #endif
   }
 
 private:
