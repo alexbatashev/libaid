@@ -5,10 +5,9 @@ module;
 #include <thread>
 #include <vector>
 
-export module aid.threading;
+export module aid.execution:thread_pool;
 
 import aid.mutex;
-
 import :thread;
 
 export namespace aid {

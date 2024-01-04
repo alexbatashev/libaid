@@ -3,7 +3,7 @@ module;
 #include <coroutine>
 #include <thread>
 
-export module aid.threading:thread;
+export module aid.execution:thread;
 
 import aid.containers;
 

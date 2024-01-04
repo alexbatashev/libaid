@@ -1,0 +1,59 @@
+load("@rules_cpp//cpp:rules.bzl", "cpp_module")
+
+cpp_module(
+    name = "thread",
+    interface = "thread.cppm",
+    module_name = "aid.execution:thread",
+    deps = [
+        "//src/containers",
+        "//src/memory",
+        "//src/mutex",
+        "//src/utils",
+    ],
+)
+
+cpp_module(
+    name = "thread_pool",
+    interface = "thread_pool.cppm",
+    module_name = "aid.execution:thread_pool",
+    deps = [
+        ":thread",
+        "//src/containers",
+        "//src/memory",
+        "//src/mutex",
+        "//src/utils",
+    ],
+)
+
+cpp_module(
+    name = "io_service",
+    interface = "io_service.cppm",
+    module_name = "aid.execution:io_service",
+    deps = [] + select({
+        "@platforms//os:linux": ["//utils/third-party:liburing"],
+    }),
+)
+
+cpp_module(
+    name = "execution",
+    srcs = select({
+        "@platforms//os:linux": ["io_service_linux.cpp"],
+        "//conditions:default": [],
+    }),
+    interface = "interface.cppm",
+    module_name = "aid.execution",
+    partitions = [
+        ":thread",
+        ":thread_pool",
+        ":io_service",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/containers",
+        "//src/memory",
+        "//src/mutex",
+        "//src/utils",
+    ] + select({
+        "@platforms//os:linux": ["//utils/third-party:liburing"],
+    }),
+)

@@ -6,8 +6,8 @@
 #include <mutex>
 #include <thread>
 
-import aid.threading;
 import aid.async;
+import aid.execution;
 
 TEST_CASE("Create default thread pool", "[thread_pool]") {
   aid::thread_pool tp;
