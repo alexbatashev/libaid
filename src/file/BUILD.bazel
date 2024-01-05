@@ -6,6 +6,7 @@ cpp_module(
     module_name = "aid.file",
     visibility = ["//visibility:public"],
     deps = [
+        "//src/async",
         "//src/containers",
         "//src/execution",
         "//src/memory",

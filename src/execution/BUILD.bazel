@@ -29,7 +29,11 @@ cpp_module(
     name = "io_service",
     interface = "io_service.cppm",
     module_name = "aid.execution:io_service",
-    deps = [] + select({
+    deps = [
+        "//src/async",
+        "//src/mutex",
+        "//src/utils",
+    ] + select({
         "@platforms//os:linux": ["//utils/third-party:liburing"],
     }),
 )
@@ -49,6 +53,7 @@ cpp_module(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/async",
         "//src/containers",
         "//src/memory",
         "//src/mutex",

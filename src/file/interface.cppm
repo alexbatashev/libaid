@@ -1,6 +1,7 @@
 module;
 
 #include <filesystem>
+#include <span>
 #include <system_error>
 
 #ifndef _WIN32
@@ -43,12 +44,12 @@ public:
     return *this;
   }
 
-  dma_file(io_dispatcher *dispatcher, fs::path path, mode m = mode::read)
+  dma_file(io_service *dispatcher, fs::path path, mode m = mode::read)
       : dispatcher_(dispatcher) {
     open_file(path, m);
   }
 
-  dma_file(std::shared_ptr<io_dispatcher> dispatcher, fs::path path,
+  dma_file(std::shared_ptr<io_service> dispatcher, fs::path path,
            mode m = mode::read)
       : owning_dispatcher_(std::move(dispatcher)) {
     dispatcher_ = owning_dispatcher_.get();
@@ -81,11 +82,22 @@ public:
     return 0;
   }
 
+  io_result read_at(fs_size offset, std::span<std::byte> buffer) {
+    return dispatcher_->read(fd_, buffer, io_offset{offset});
+  }
+
+  io_result write_at(fs_size offset, std::span<std::byte> buffer) {
+    return dispatcher_->write(fd_, buffer, io_offset{offset});
+  }
+
   ~dma_file() { close(); }
 
 private:
   void open_file(fs::path path, mode m) {
-    int flags = O_DIRECT;
+    int flags = 0;
+    // FIXME: this fails due to compile issues
+    // if (fs::is_regular_file(path))
+    // flags |= O_DIRECT;
     switch (m) {
     case mode::read:
       flags |= O_RDONLY;
@@ -109,7 +121,7 @@ private:
   }
 
   int fd_;
-  std::shared_ptr<io_dispatcher> owning_dispatcher_;
-  io_dispatcher *dispatcher_;
+  std::shared_ptr<io_service> owning_dispatcher_;
+  io_service *dispatcher_;
 };
 } // namespace aid
