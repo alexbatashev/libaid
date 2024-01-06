@@ -20,9 +20,9 @@ cpp_module(
 )
 
 cpp_module(
-    name = "task",
-    interface = "task.cppm",
-    module_name = "aid.async:task",
+    name = "async_task",
+    interface = "async_task.cppm",
+    module_name = "aid.async:async_task",
     deps = [
         ":manual_event",
         ":sync_task",
@@ -31,13 +31,13 @@ cpp_module(
 
 cpp_module(
     name = "async",
-    interface = "interface.cppm",
+    interface = "async.cppm",
     module_name = "aid.async",
     partitions = [
         ":generator",
         ":manual_event",
         ":sync_task",
-        ":task",
+        ":async_task",
     ],
     visibility = ["//visibility:public"],
 )

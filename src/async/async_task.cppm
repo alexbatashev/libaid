@@ -1,5 +1,5 @@
-// The task class is heavily derived from Lewiss Baker's cppcoro. The original
-// copyright notice is below.
+// The async_task class is heavily derived from Lewiss Baker's cppcoro.
+// The original copyright notice is below.
 //
 // Copyright 2017 Lewis Baker
 //
@@ -26,16 +26,16 @@ module;
 #include <coroutine>
 #include <variant>
 
-export module aid.async:task;
+export module aid.async:async_task;
 
 import :sync_task;
 import :manual_event;
 
 namespace aid {
-export template <typename Value> class task;
+export template <typename Value> class async_task;
 
 namespace detail {
-class task_promise_base {
+class async_task_promise_base {
 public:
   std::suspend_always initial_suspend() noexcept { return {}; }
   auto final_suspend() noexcept { return awaitable{}; }
@@ -58,18 +58,18 @@ private:
   std::coroutine_handle<> mContinuation;
 };
 
-template <typename Value> class task_promise final : public task_promise_base {
+template <typename Value> class async_task_promise final : public async_task_promise_base {
 public:
-  task_promise() noexcept = default;
+  async_task_promise() noexcept = default;
 
-  ~task_promise() {
+  ~async_task_promise() {
     if (std::holds_alternative<Value>(mResult))
       std::get<Value>(mResult).~Value();
     else if (std::holds_alternative<std::exception_ptr>(mResult))
       std::get<std::exception_ptr>(mResult).~exception_ptr();
   }
 
-  task<Value> get_return_object() noexcept;
+  async_task<Value> get_return_object() noexcept;
 
   void unhandled_exception() noexcept { mResult = std::current_exception(); }
 
@@ -91,11 +91,11 @@ private:
   std::variant<std::monostate, Value, std::exception_ptr> mResult;
 };
 
-template <> class task_promise<void> : public task_promise_base {
+template <> class async_task_promise<void> : public async_task_promise_base {
 public:
-  task_promise() noexcept = default;
+  async_task_promise() noexcept = default;
 
-  task<void> get_return_object() noexcept;
+  async_task<void> get_return_object() noexcept;
 
   void return_void() noexcept {}
 
@@ -111,20 +111,20 @@ private:
 };
 } // namespace detail
 
-export template <typename Value = void> class [[nodiscard]] task {
+export template <typename Value = void> class [[nodiscard]] async_task {
 public:
-  using promise_type = detail::task_promise<Value>;
+  using promise_type = detail::async_task_promise<Value>;
   using value_type = Value;
 
-  task() noexcept = default;
-  task(const task &) = delete;
+  async_task() noexcept = default;
+  async_task(const async_task &) = delete;
 
-  task(task &&t) noexcept : mHandle{t.mHandle} { t.mHandle = nullptr; }
+  async_task(async_task &&t) noexcept : mHandle{t.mHandle} { t.mHandle = nullptr; }
 
-  explicit task(std::coroutine_handle<promise_type> handle) noexcept
+  explicit async_task(std::coroutine_handle<promise_type> handle) noexcept
       : mHandle{handle} {}
 
-  task &operator=(task &&t) noexcept {
+  async_task &operator=(async_task &&t) noexcept {
     if (std::addressof(t) != this) {
       if (mHandle)
         mHandle.destroy();
@@ -136,7 +136,7 @@ public:
     return *this;
   }
 
-  ~task() {
+  ~async_task() {
     if (mHandle)
       mHandle.destroy();
   }
@@ -194,26 +194,26 @@ private:
 
 namespace detail {
 template <typename Value>
-inline task<Value> task_promise<Value>::get_return_object() noexcept {
-  return aid::task<Value>{
-      std::coroutine_handle<task_promise>::from_promise(*this)};
+inline async_task<Value> async_task_promise<Value>::get_return_object() noexcept {
+  return aid::async_task<Value>{
+      std::coroutine_handle<async_task_promise>::from_promise(*this)};
 }
 
-inline task<void> task_promise<void>::get_return_object() noexcept {
-  return aid::task<void>{
-      std::coroutine_handle<task_promise>::from_promise(*this)};
+inline async_task<void> async_task_promise<void>::get_return_object() noexcept {
+  return aid::async_task<void>{
+      std::coroutine_handle<async_task_promise>::from_promise(*this)};
 }
 
 template <typename Value>
 inline sync_task<std::remove_reference_t<Value>>
-make_sync_task(task<Value> &&t) {
-  co_yield co_await std::forward<task<Value>>(t);
+make_sync_task(async_task<Value> &&t) {
+  co_yield co_await std::forward<async_task<Value>>(t);
 }
 } // namespace detail
 
-export template <typename Value> inline decltype(auto) sync_wait(task<Value> &&t) {
+export template <typename Value> inline decltype(auto) sync_wait(async_task<Value> &&t) {
   manual_event evt;
-  auto sync = detail::make_sync_task(std::forward<task<Value>>(t));
+  auto sync = detail::make_sync_task(std::forward<async_task<Value>>(t));
   sync.start(evt);
   evt.wait();
 
