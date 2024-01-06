@@ -32,10 +32,12 @@ export module aid.async:sync_task;
 import :manual_event;
 
 namespace aid {
-export template <typename Value> class sync_task;
+export template <typename Value>
+class sync_task;
 
 namespace detail {
-template <typename Value> class sync_task_promise final {
+template <typename Value>
+class sync_task_promise final {
   using coro_handle_t = std::coroutine_handle<sync_task_promise<Value>>;
 
 public:
@@ -89,7 +91,8 @@ private:
   std::exception_ptr mException;
 };
 
-template <> class sync_task_promise<void> {
+template <>
+class sync_task_promise<void> {
   using coro_handle_t = std::coroutine_handle<sync_task_promise<void>>;
 
 public:
@@ -134,7 +137,8 @@ private:
 };
 } // namespace detail
 
-export template <typename Value> class sync_task final {
+export template <typename Value>
+class sync_task final {
 public:
   using promise_type = detail::sync_task_promise<Value>;
   using coro_handle_t = std::coroutine_handle<promise_type>;

@@ -8,7 +8,8 @@ export module aid.containers:thread_safe_queue;
 import aid.mutex;
 
 namespace aid {
-export template <typename T> class thread_safe_queue {
+export template <typename T>
+class thread_safe_queue {
 public:
   thread_safe_queue() : mQueue(std::list<T>()) {}
   void push(T value) {
@@ -37,7 +38,8 @@ public:
     return isEmpty;
   }
 
-  template <typename F> std::optional<T> find_if(F &&pred) {
+  template <typename F>
+  std::optional<T> find_if(F &&pred) {
     std::optional<T> ret;
 
     mQueue.with_lock([&](auto &queue) {
@@ -53,7 +55,8 @@ public:
     return ret;
   }
 
-  template <typename ST> void wait(ST /*std::stop_token*/ token) {
+  template <typename ST>
+  void wait(ST /*std::stop_token*/ token) {
     const auto hasElement = [](const auto &queue) { return !queue.empty(); };
 
     mQueue.wait(hasElement, token);

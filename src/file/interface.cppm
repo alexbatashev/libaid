@@ -115,7 +115,8 @@ private:
     if (fd_ == -1) {
       int savedErrno = errno;
       throw fs::filesystem_error(
-          "failed to open a file", path,
+          "failed to open a file",
+          path,
           std::error_code(savedErrno, std::generic_category()));
     }
   }

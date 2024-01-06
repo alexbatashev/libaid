@@ -5,22 +5,23 @@ export module aid.mutex:lock;
 export namespace aid {
 template <typename T>
 concept lockable = requires(T m) {
-                     { m.lock() };
-                     { m.unlock() };
-                   };
+  { m.lock() };
+  { m.unlock() };
+};
 
 template <typename T>
 concept rw_lockable = lockable<T> && requires(T m) {
-                                       { m.lock_shared() };
-                                       { m.unlock_shared() };
-                                       { m.upgrade() };
-                                     };
+  { m.lock_shared() };
+  { m.unlock_shared() };
+  { m.upgrade() };
+};
 
 /// RAII-style read lock.
 ///
 /// Unlike std::shared_lock this class provides aims to upgrade reader lock to
 /// writer lock, which in some cases can improve performance.
-template <rw_lockable Mutex> class shared_lock {
+template <rw_lockable Mutex>
+class shared_lock {
 public:
   shared_lock() = default;
 
@@ -57,5 +58,6 @@ private:
   bool mIsWriter = false;
 };
 
-template <rw_lockable Mutex> shared_lock(Mutex &) -> shared_lock<Mutex>;
+template <rw_lockable Mutex>
+shared_lock(Mutex &) -> shared_lock<Mutex>;
 } // namespace aid

@@ -21,7 +21,8 @@ public:
   void notify_one() { mCV.notify_one(); }
   void notify_all() { mCV.notify_all(); }
 
-  template <typename F> void wait(F &&f) {
+  template <typename F>
+  void wait(F &&f) {
     std::unique_lock lock{super::mMutex};
     mCV.wait(lock, [&, this]() {
       return std::invoke(std::forward<F>(f), super::mValue);
@@ -31,17 +32,18 @@ public:
   template <typename F>
   void wait(F &&f, std::stop_token token) {
     std::unique_lock lock{super::mMutex};
-    #ifdef _LIBCPP_VERSION
-    // FIXME(alexbatashev): due to a bug in libc++, the stop_token is ignored.
+#ifdef _LIBCPP_VERSION
+    // FIXME(alexbatashev): due to a bug in libc++, the stop_token is
+    // ignored.
     using namespace std::literals;
     mCV.wait_for(lock, token, 40ms, [&, this]() {
       return std::invoke(std::forward<F>(f), super::mValue);
     });
-    #else
+#else
     mCV.wait(lock, token, [&, this]() {
       return std::invoke(std::forward<F>(f), super::mValue);
     });
-    #endif
+#endif
   }
 
 private:

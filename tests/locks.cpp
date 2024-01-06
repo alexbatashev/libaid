@@ -5,7 +5,8 @@
 
 import aid.mutex;
 
-template <aid::lockable M> void test_mutex() {
+template <aid::lockable M>
+void test_mutex() {
   {
     M m;
     m.lock();
@@ -28,7 +29,8 @@ template <aid::lockable M> void test_mutex() {
   }
 }
 
-template <aid::rw_lockable M> void test_rw_mutex() {
+template <aid::rw_lockable M>
+void test_rw_mutex() {
   {
     M mutex;
     aid::shared_lock lock{mutex};

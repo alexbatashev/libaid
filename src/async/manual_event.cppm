@@ -19,4 +19,4 @@ public:
 private:
   std::atomic_flag mFlag = ATOMIC_FLAG_INIT;
 };
-} // namespace aid::detail
+} // namespace aid

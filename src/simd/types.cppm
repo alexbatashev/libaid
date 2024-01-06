@@ -22,7 +22,8 @@ class simd {
   static_assert(false, "Unsupported SIMD configuration");
 };
 
-template <typename T, unsigned Dim1> class simd<T, Dim1, 1> {
+template <typename T, unsigned Dim1>
+class simd<T, Dim1, 1> {
   static_assert(Dim1 * sizeof(T) <= max_simd_register_bit_width,
                 "Unsupported SIMD configuration");
 
@@ -45,12 +46,14 @@ public:
 
   constexpr void set(unsigned idx, T value) noexcept { value_[idx] = value; }
 
-  template <unsigned Idx> constexpr T get() const noexcept {
+  template <unsigned Idx>
+  constexpr T get() const noexcept {
     static_assert(Idx < Dim1, "Out-of-index access");
     return value_[Idx];
   }
 
-  template <unsigned Idx> constexpr void set(T value) noexcept {
+  template <unsigned Idx>
+  constexpr void set(T value) noexcept {
     static_assert(Idx < Dim1, "Out-of-index access");
     value_[Idx] = value;
   }
