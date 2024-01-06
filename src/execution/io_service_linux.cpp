@@ -66,8 +66,11 @@ io_result aid::uring_service::read(int fd, std::span<std::byte> buffer,
   auto event = std::make_unique<manual_event>();
   ring_.with_sqe(
       [fd, buffer, offset, &event](io_uring &ring, io_uring_sqe *sqe) {
-        io_uring_prep_read(sqe, fd, static_cast<void *>(buffer.data()),
-                           buffer.size(), offset.value);
+        io_uring_prep_read(sqe,
+                           fd,
+                           static_cast<void *>(buffer.data()),
+                           buffer.size(),
+                           offset.value);
         io_uring_sqe_set_data(sqe, event.get());
       });
 
@@ -79,8 +82,11 @@ io_result aid::uring_service::write(int fd, std::span<std::byte> buffer,
   auto event = std::make_unique<manual_event>();
   ring_.with_sqe(
       [fd, buffer, offset, &event](io_uring &ring, io_uring_sqe *sqe) {
-        io_uring_prep_write(sqe, fd, static_cast<void *>(buffer.data()),
-                            buffer.size(), offset.value);
+        io_uring_prep_write(sqe,
+                            fd,
+                            static_cast<void *>(buffer.data()),
+                            buffer.size(),
+                            offset.value);
         io_uring_sqe_set_data(sqe, event.get());
       });
 

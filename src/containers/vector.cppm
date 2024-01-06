@@ -11,7 +11,8 @@ export module aid.containers:vector;
 import aid.memory;
 
 export namespace aid {
-template <typename T> class vector_base {
+template <typename T>
+class vector_base {
 public:
   using value_type = T;
   using size_type = std::size_t;
@@ -89,8 +90,8 @@ public:
     super::mCapacity = other.mCapacity;
 
     if (other.mStart == reinterpret_cast<const T *>(other.mStackData.data())) {
-      std::copy(other.mStart, other.mEnd,
-                reinterpret_cast<T *>(mStackData.data()));
+      std::copy(
+          other.mStart, other.mEnd, reinterpret_cast<T *>(mStackData.data()));
 
       super::mStart = reinterpret_cast<T *>(mStackData.data());
       super::mEnd = super::mStart + other.size();
@@ -106,8 +107,8 @@ public:
     super::mCapacity = other.mCapacity;
 
     if (other.mStart == reinterpret_cast<const T *>(other.mStackData.data())) {
-      std::copy(other.mStart, other.mEnd,
-                reinterpret_cast<T *>(mStackData.data()));
+      std::copy(
+          other.mStart, other.mEnd, reinterpret_cast<T *>(mStackData.data()));
 
       super::mStart = reinterpret_cast<T *>(mStackData.data());
       super::mEnd = super::mStart + other.size();
@@ -166,7 +167,8 @@ public:
     return super::mStart[numElements];
   }
 
-  template <typename... Ts> T &emplace_back(Ts &&...args) {
+  template <typename... Ts>
+  T &emplace_back(Ts &&...args) {
     std::size_t numElements = super::size();
     if (numElements == super::mCapacity)
       reserve(super::mCapacity + super::mCapacity / 2);
@@ -207,8 +209,8 @@ private:
     auto withResource =
         [count, oldPtr](memory_resource *resource) -> std::optional<T *> {
       if constexpr (std::is_trivially_copyable_v<T>) {
-        auto maybePtr = resource->reallocate(trivial_mem_tag, oldPtr,
-                                             count * sizeof(T), alignof(T));
+        auto maybePtr = resource->reallocate(
+            trivial_mem_tag, oldPtr, count * sizeof(T), alignof(T));
         if (maybePtr)
           return static_cast<T *>(*maybePtr);
       } else {
@@ -232,7 +234,8 @@ private:
   memory_resource *mMemoryResource = nullptr;
 };
 
-template <typename T> class vector : public vector_base<T> {
+template <typename T>
+class vector : public vector_base<T> {
   using super = vector_base<T>;
 
 public:
@@ -312,7 +315,8 @@ public:
     return super::mStart[numElements];
   }
 
-  template <typename... Ts> T &emplace_back(Ts &&...args) {
+  template <typename... Ts>
+  T &emplace_back(Ts &&...args) {
     if (super::mCapacity == 0)
       reserve(16);
     std::size_t numElements = super::size();
@@ -355,8 +359,8 @@ private:
     auto withResource =
         [count, oldPtr](memory_resource *resource) -> std::optional<T *> {
       if constexpr (std::is_trivially_copyable_v<T>) {
-        auto maybePtr = resource->reallocate(trivial_mem_tag, oldPtr,
-                                             count * sizeof(T), alignof(T));
+        auto maybePtr = resource->reallocate(
+            trivial_mem_tag, oldPtr, count * sizeof(T), alignof(T));
         if (maybePtr)
           return static_cast<T *>(*maybePtr);
       } else {

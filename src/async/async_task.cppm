@@ -32,7 +32,8 @@ import :sync_task;
 import :manual_event;
 
 namespace aid {
-export template <typename Value> class async_task;
+export template <typename Value>
+class async_task;
 
 namespace detail {
 class async_task_promise_base {
@@ -58,7 +59,8 @@ private:
   std::coroutine_handle<> mContinuation;
 };
 
-template <typename Value> class async_task_promise final : public async_task_promise_base {
+template <typename Value>
+class async_task_promise final : public async_task_promise_base {
 public:
   async_task_promise() noexcept = default;
 
@@ -91,7 +93,8 @@ private:
   std::variant<std::monostate, Value, std::exception_ptr> mResult;
 };
 
-template <> class async_task_promise<void> : public async_task_promise_base {
+template <>
+class async_task_promise<void> : public async_task_promise_base {
 public:
   async_task_promise() noexcept = default;
 
@@ -111,7 +114,8 @@ private:
 };
 } // namespace detail
 
-export template <typename Value = void> class [[nodiscard]] async_task {
+export template <typename Value = void>
+class [[nodiscard]] async_task {
 public:
   using promise_type = detail::async_task_promise<Value>;
   using value_type = Value;
@@ -119,7 +123,9 @@ public:
   async_task() noexcept = default;
   async_task(const async_task &) = delete;
 
-  async_task(async_task &&t) noexcept : mHandle{t.mHandle} { t.mHandle = nullptr; }
+  async_task(async_task &&t) noexcept : mHandle{t.mHandle} {
+    t.mHandle = nullptr;
+  }
 
   explicit async_task(std::coroutine_handle<promise_type> handle) noexcept
       : mHandle{handle} {}
@@ -194,7 +200,8 @@ private:
 
 namespace detail {
 template <typename Value>
-inline async_task<Value> async_task_promise<Value>::get_return_object() noexcept {
+inline async_task<Value>
+async_task_promise<Value>::get_return_object() noexcept {
   return aid::async_task<Value>{
       std::coroutine_handle<async_task_promise>::from_promise(*this)};
 }
@@ -211,7 +218,8 @@ make_sync_task(async_task<Value> &&t) {
 }
 } // namespace detail
 
-export template <typename Value> inline decltype(auto) sync_wait(async_task<Value> &&t) {
+export template <typename Value>
+inline decltype(auto) sync_wait(async_task<Value> &&t) {
   manual_event evt;
   auto sync = detail::make_sync_task(std::forward<async_task<Value>>(t));
   sync.start(evt);

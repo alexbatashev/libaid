@@ -8,7 +8,8 @@ export module aid.async:generator;
 
 namespace aid {
 namespace detail {
-template <typename T> struct yield_traits {
+template <typename T>
+struct yield_traits {
   using type = std::conditional_t<(sizeof(T) > sizeof(void *)), T *, T>;
 
   static constexpr bool is_byref() noexcept {
@@ -16,7 +17,8 @@ template <typename T> struct yield_traits {
   }
 };
 } // namespace detail
-export template <typename T> class [[nodiscard]] generator {
+export template <typename T>
+class [[nodiscard]] generator {
 public:
   struct promise_type;
   using handle_type = std::coroutine_handle<promise_type>;

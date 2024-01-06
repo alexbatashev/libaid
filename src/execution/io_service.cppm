@@ -90,7 +90,8 @@ public:
     flush_queue_unsafe();
   }
 
-  template <typename F> auto with_sqe(F &&f) {
+  template <typename F>
+  auto with_sqe(F &&f) {
     std::unique_lock _{mutex_};
     auto *sqe = get_sqe();
     return f(ring_, sqe);
