@@ -19,7 +19,7 @@ TEST_CASE("Create static thread pool", "[thread_pool]") {
   REQUIRE(tp.get_num_threads() == 42);
 }
 
-aid::task<std::thread::id> sample_task(aid::thread_pool &tp) {
+aid::async_task<std::thread::id> sample_task(aid::thread_pool &tp) {
   using namespace std::chrono_literals;
 
   co_await tp.schedule();
