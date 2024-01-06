@@ -1,0 +1,41 @@
+load("@rules_cpp//cpp:rules.bzl", "cpp_module")
+
+cpp_module(
+    name = "probe",
+    interface = "probe.cppm",
+    module_name = "aid.simd:probe",
+)
+
+cpp_module(
+    name = "dispatch",
+    interface = select({
+        "@platforms//cpu:x86_64": "dispatch_x64.cppm",
+        "//conditions:default": "UNSUPPORTED",
+    }),
+    module_name = "aid.simd:dispatch",
+    deps = [
+        ":probe",
+    ],
+)
+
+cpp_module(
+    name = "types",
+    interface = "types.cppm",
+    module_name = "aid.simd:types",
+)
+
+cpp_module(
+    name = "simd",
+    srcs = select({
+        "@platforms//cpu:x86_64": ["probe_x64.cpp"],
+        "//conditions:default": [],
+    }),
+    interface = "simd.cppm",
+    module_name = "aid.simd",
+    partitions = [
+        ":dispatch",
+        ":types",
+        ":probe",
+    ],
+    visibility = ["//visibility:public"],
+)
