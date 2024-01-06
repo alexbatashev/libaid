@@ -59,7 +59,7 @@ __attribute__((target("avx2"))) auto dispatch_avx2(Args &&...args) {
 template <typename F, typename... Args>
 __attribute__((target("avx512f"))) auto dispatch_avx512f(Args &&...args) {
   F func;
-  simd_tag</*max_simd_register_bit_width=*/256,
+  simd_tag</*max_simd_register_bit_width=*/512,
            /*has_sse42=*/true,
            /*has_avx=*/true,
            /*has_avx2=*/true,
