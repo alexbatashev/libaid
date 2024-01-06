@@ -1,0 +1,17 @@
+load("@rules_cpp//cpp:rules.bzl", "cpp_module")
+
+cpp_module(
+    name = "file",
+    interface = "interface.cppm",
+    module_name = "aid.file",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/async",
+        "//src/containers",
+        "//src/execution",
+        "//src/memory",
+        "//src/mutex",
+        "//src/utils",
+        "//utils/third-party:liburing",
+    ],
+)

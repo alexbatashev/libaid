@@ -39,3 +39,4 @@ bazel-*
 
 user.bazelrc
 *.lock
+compile_commands.json
