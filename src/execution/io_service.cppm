@@ -63,6 +63,8 @@ public:
 
   virtual io_result read(int fd, std::span<std::byte> buffer,
                          io_offset offset) = 0;
+  virtual io_result write(int fd, std::span<std::byte> buffer,
+                          io_offset offset) = 0;
 
   virtual ~io_service() = default;
 };
@@ -119,8 +121,10 @@ public:
 
   void flush() override { ring_.flush_queue(); };
 
-  virtual io_result read(int fd, std::span<std::byte> buffer,
-                         io_offset offset) override;
+  io_result read(int fd, std::span<std::byte> buffer,
+                 io_offset offset) override;
+  io_result write(int fd, std::span<std::byte> buffer,
+                  io_offset offset) override;
 
 private:
   int efd_ = ::eventfd(0, 0);
