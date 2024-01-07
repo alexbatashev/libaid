@@ -50,7 +50,9 @@ private:
     template <typename Promise>
     std::coroutine_handle<>
     await_suspend(std::coroutine_handle<Promise> handle) noexcept {
-      return handle.promise().mContinuation;
+      if (handle.promise().mContinuation)
+        return handle.promise().mContinuation;
+      return std::noop_coroutine();
     }
 
     void await_resume() noexcept {}

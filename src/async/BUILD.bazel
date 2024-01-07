@@ -7,6 +7,12 @@ cpp_module(
 )
 
 cpp_module(
+    name = "future",
+    interface = "future.cppm",
+    module_name = "aid.async:future",
+)
+
+cpp_module(
     name = "manual_event",
     interface = "manual_event.cppm",
     module_name = "aid.async:manual_event",
@@ -38,6 +44,7 @@ cpp_module(
         ":manual_event",
         ":sync_task",
         ":async_task",
+        ":future",
     ],
     visibility = ["//visibility:public"],
 )
