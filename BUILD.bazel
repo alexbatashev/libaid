@@ -4,6 +4,7 @@ cpp_test(
     name = "tests",
     srcs = [
         "tests/generator.cpp",
+        "tests/lock_free_deque.cpp",
         "tests/locks.cpp",
         "tests/memory_resource.cpp",
         "tests/simd.cpp",

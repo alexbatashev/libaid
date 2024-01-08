@@ -20,12 +20,35 @@ cpp_module(
 )
 
 cpp_module(
+    name = "fixed_array",
+    interface = "fixed_array.cppm",
+    module_name = "aid.containers:fixed_array",
+    deps = [
+        ":vector",
+        "//src/memory",
+    ],
+)
+
+cpp_module(
+    name = "lock_free_deque",
+    interface = "lock_free_deque.cppm",
+    module_name = "aid.containers:lock_free_deque",
+    deps = [
+        ":fixed_array",
+        ":vector",
+        "//src/memory",
+    ],
+)
+
+cpp_module(
     name = "containers",
     interface = "interface.cppm",
     module_name = "aid.containers",
     partitions = [
         ":thread_safe_queue",
         ":vector",
+        ":fixed_array",
+        ":lock_free_deque",
     ],
     visibility = ["//visibility:public"],
     deps = [
