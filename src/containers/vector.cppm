@@ -60,6 +60,8 @@ public:
 
   virtual void reserve(std::size_t count) = 0;
 
+  virtual void resize(std::size_t count, const T &value = T()) = 0;
+
 protected:
   vector_base() = default;
   explicit vector_base(size_t capacity) : mCapacity(capacity){};
@@ -152,6 +154,59 @@ public:
         super::mEnd = *maybePtr + numElements;
       }
     }
+
+    super::mCapacity = newCapacity;
+  }
+
+  void resize(std::size_t newCapacity, const T &value) override {
+    auto init = [this, &value](T *start, T *end) {
+      for (auto it = start; it != end; ++it)
+        new (it) T(value);
+      super::mEnd = end;
+    };
+
+    auto deinit = [this](T *start, T *end) {
+      for (auto it = start; it != end; ++it)
+        std::destroy_at(it);
+      super::mEnd = start;
+    };
+
+    if (super::size() > newCapacity) {
+      std::size_t diff = super::size() - newCapacity;
+      deinit(super::mEnd - diff, super::mEnd);
+      return;
+    }
+
+    std::size_t diff = newCapacity - super::size();
+    if (newCapacity < InlineSize) {
+      init(super::mEnd, super::mEnd + diff);
+      return;
+    }
+
+    auto allocMove = [this, newCapacity] {
+      T *newStart = allocate(newCapacity);
+
+      std::move(super::mStart, super::mEnd, newStart);
+      std::size_t numElements = super::size();
+      super::mStart = newStart;
+      super::mEnd = newStart + numElements;
+    };
+
+    if (super::mStart == reinterpret_cast<T *>(mStackData.data())) {
+      allocMove();
+    } else {
+      std::optional<T *> maybePtr = reallocate(super::mStart, newCapacity);
+
+      if (!maybePtr) {
+        allocMove();
+      } else {
+        std::size_t numElements = super::size();
+        super::mStart = *maybePtr;
+        super::mEnd = *maybePtr + numElements;
+      }
+    }
+
+    init(super::mEnd, super::mEnd + diff);
 
     super::mCapacity = newCapacity;
   }
@@ -302,6 +357,55 @@ public:
     super::mCapacity = newCapacity;
   }
 
+  void resize(std::size_t newCapacity, const T &value) override {
+    auto init = [this, &value](T *start, T *end) {
+      for (auto it = start; it != end; ++it)
+        new (it) T(value);
+      super::mEnd = end;
+    };
+
+    auto deinit = [this](T *start, T *end) {
+      for (auto it = start; it != end; ++it)
+        std::destroy_at(it);
+      super::mEnd = start;
+    };
+
+    if (super::size() > newCapacity) {
+      std::size_t diff = super::size() - newCapacity;
+      deinit(super::mEnd - diff, super::mEnd);
+      return;
+    }
+
+    std::size_t diff = newCapacity - super::size();
+
+    auto allocMove = [this, newCapacity] {
+      T *newStart = allocate(newCapacity);
+
+      std::move(super::mStart, super::mEnd, newStart);
+      std::size_t numElements = super::size();
+      super::mStart = newStart;
+      super::mEnd = newStart + numElements;
+    };
+
+    if (super::mStart == nullptr) {
+      allocMove();
+    } else {
+      std::optional<T *> maybePtr = reallocate(super::mStart, newCapacity);
+
+      if (!maybePtr) {
+        allocMove();
+      } else {
+        std::size_t numElements = super::size();
+        super::mStart = *maybePtr;
+        super::mEnd = *maybePtr + numElements;
+      }
+    }
+
+    init(super::mEnd, super::mEnd + diff);
+
+    super::mCapacity = newCapacity;
+  }
+
   T &push_back(T &&element) override {
     if (super::mCapacity == 0)
       reserve(16);
@@ -380,6 +484,6 @@ private:
     return withResource(&r);
   }
 
-  memory_resource *mMemoryResource = nullptr;
+  [[no_unique_address]] memory_resource *mMemoryResource = nullptr;
 };
 } // namespace aid

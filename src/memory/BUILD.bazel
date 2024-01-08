@@ -7,11 +7,18 @@ cpp_module(
 )
 
 cpp_module(
+    name = "atomic_box",
+    interface = "atomic_box.cppm",
+    module_name = "aid.memory:atomic_box",
+)
+
+cpp_module(
     name = "memory",
     interface = "interface.cppm",
     module_name = "aid.memory",
     partitions = [
         ":memory_resource",
+        ":atomic_box",
     ],
     visibility = ["//visibility:public"],
 )
