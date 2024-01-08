@@ -2,7 +2,7 @@
 
 import aid.containers;
 
-TEST_CASE("Basic inline vector", "[containers.inline_vector]") {
+TEST_CASE("Basic inline vector", "[containers][inline_vector]") {
   aid::inline_vector<int, 5> vec;
 
   REQUIRE(vec.size() == 0);
@@ -46,7 +46,7 @@ TEST_CASE("Basic inline vector", "[containers.inline_vector]") {
   REQUIRE(vec.front() == 42);
 }
 
-TEST_CASE("Basic vector", "[containers.vector]") {
+TEST_CASE("Basic vector", "[containers][vector]") {
   aid::vector<int> vec;
 
   REQUIRE(vec.size() == 0);
