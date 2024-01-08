@@ -5,7 +5,6 @@ module;
 #include <coroutine>
 #include <cstdint>
 #include <exception>
-#include <iostream>
 #include <memory>
 #include <tuple>
 #include <type_traits>
@@ -55,11 +54,16 @@ public:
     std::ignore = ready_.test_and_set();
     ready_.notify_all();
   }
+
+  virtual ~future_promise_base() = default;
+
 protected:
   void rethrow_exception() {
     if (exception_ != nullptr)
       std::rethrow_exception(exception_);
   }
+
+  uint32_t refcount() const noexcept { return ref_count_.load(); }
 
 private:
   std::atomic<std::uint32_t> ref_count_ = 1;
@@ -74,16 +78,13 @@ public:
   future_promise() noexcept = default;
 
   ~future_promise() {
-    if (super::is_ready() && !super::has_exception()) {
+    if (super::is_ready() && !super::has_exception() &&
+        super::refcount() == 1) {
       std::destroy_at(std::launder(reinterpret_cast<T*>(&data_[0])));
     }
   }
 
   future<T> get_return_object() noexcept;
-
-  void resume() noexcept {
-    std::coroutine_handle<future_promise>::from_promise(*this).resume();
-  }
 
   template <typename Value>
   requires std::convertible_to<Value&&, T>
@@ -99,7 +100,49 @@ public:
 private:
   alignas(T) char data_[sizeof(T)];
 };
+
+template <>
+class future_promise<void> : public future_promise_base {
+  using super = future_promise_base;
+
+public:
+  future_promise() noexcept = default;
+
+  ~future_promise() = default;
+
+  future<void> get_return_object() noexcept;
+
+  void return_void() noexcept { super::notify_complete(); }
+
+  void result() { super::rethrow_exception(); }
 };
+
+template <typename T>
+class future_promise<T &> : public future_promise_base {
+  using super = future_promise_base;
+
+public:
+  future_promise() noexcept = default;
+
+  ~future_promise() = default;
+
+  future<T &> get_return_object() noexcept;
+
+  void return_value(T &value) noexcept {
+    value_ = std::addressof(value);
+    super::notify_complete();
+  }
+
+  T &result() {
+    super::rethrow_exception();
+    return *value_;
+  }
+
+private:
+  T *value_;
+};
+
+} // namespace detail
 
 export template <typename Value>
 class [[nodiscard]] future {
@@ -190,7 +233,7 @@ private:
 
   void destroy() noexcept {
     if (handle_ && handle_.promise().release()) {
-      // FIXME: why does this crash???
+      // FIXME: why does this crash while ~future_promise is still called???
       // handle_.destroy();
       handle_ = nullptr;
     }
@@ -213,6 +256,17 @@ namespace detail {
 template <typename Value>
 future<Value> future_promise<Value>::get_return_object() noexcept {
   return future<Value>{
+      std::coroutine_handle<future_promise<Value>>::from_promise(*this)};
+}
+
+future<void> future_promise<void>::get_return_object() noexcept {
+  return future<void>{
+      std::coroutine_handle<future_promise<void>>::from_promise(*this)};
+}
+
+template <typename Value>
+future<Value &> future_promise<Value &>::get_return_object() noexcept {
+  return future<Value &>{
       std::coroutine_handle<future_promise<Value>>::from_promise(*this)};
 }
 } // namespace detail

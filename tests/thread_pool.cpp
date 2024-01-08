@@ -46,7 +46,8 @@ TEST_CASE("Successfully schedule work", "[thread_pool][async]") {
   REQUIRE(value != std::this_thread::get_id());
 }
 
-TEST_CASE("Futures can be waited synchronously", "[thread_pool][async]") {
+TEST_CASE("Futures can be waited synchronously",
+          "[thread_pool][async][future]") {
   aid::thread_pool tp{2};
 
   auto task = sample_task(tp);
