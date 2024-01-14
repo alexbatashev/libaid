@@ -1,0 +1,21 @@
+load("@rules_cpp//cpp:rules.bzl", "cpp_binary")
+
+cpp_binary(
+    name = "benchmarks",
+    srcs = [
+        "threading.cpp",
+    ],
+    deps = [
+        "//src/async",
+        "//src/containers",
+        "//src/execution",
+        "//src/file",
+        "//src/memory",
+        "//src/mutex",
+        "//src/simd",
+        "//src/utils",
+        "//utils/third-party:liburing",
+        "@google_benchmark//:benchmark_main",
+        "@google_benchmark//:benchmark",
+    ],
+)
