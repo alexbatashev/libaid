@@ -62,6 +62,18 @@ public:
 
   virtual void resize(std::size_t count, const T &value = T()) = 0;
 
+  void clear() {
+    for (auto it = mStart; it != mEnd; ++it)
+      std::destroy_at(it);
+    mEnd = mStart;
+  }
+
+  void erase(iterator start) {
+    for (auto it = start; it != mEnd; ++it)
+      std::destroy_at(it);
+    mEnd = start;
+  }
+
 protected:
   vector_base() = default;
   explicit vector_base(size_t capacity) : mCapacity(capacity){};

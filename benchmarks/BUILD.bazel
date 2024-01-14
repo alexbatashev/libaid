@@ -3,6 +3,7 @@ load("@rules_cpp//cpp:rules.bzl", "cpp_binary")
 cpp_binary(
     name = "benchmarks",
     srcs = [
+        "thread_safe_queue.cpp",
         "threading.cpp",
     ],
     deps = [
