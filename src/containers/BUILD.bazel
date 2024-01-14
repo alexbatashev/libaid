@@ -1,21 +1,23 @@
 load("@rules_cpp//cpp:rules.bzl", "cpp_module")
 
 cpp_module(
-    name = "thread_safe_queue",
-    interface = "thread_safe_queue.cppm",
-    module_name = "aid.containers:thread_safe_queue",
-    deps = [
-        "//src/mutex",
-        "//src/utils",
-    ],
-)
-
-cpp_module(
     name = "vector",
     interface = "vector.cppm",
     module_name = "aid.containers:vector",
     deps = [
         "//src/memory",
+    ],
+)
+
+cpp_module(
+    name = "thread_safe_queue",
+    interface = "thread_safe_queue.cppm",
+    module_name = "aid.containers:thread_safe_queue",
+    deps = [
+        "//src/mutex",
+        "//src/memory",
+        "//src/utils",
+        ":vector",
     ],
 )
 

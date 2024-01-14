@@ -2,6 +2,7 @@ module;
 
 #include <functional>
 #include <mutex>
+#include <optional>
 
 export module aid.mutex:exclusive;
 
@@ -22,6 +23,24 @@ public:
   template <typename F>
   decltype(auto) with_lock(F &&f) const {
     std::unique_lock _{mMutex};
+    return std::invoke(std::forward<F>(f), mValue);
+  }
+
+  template <typename F>
+  std::optional<std::invoke_result_t<F, Value>> try_with_lock(F &&f) {
+    std::unique_lock lock{mMutex, std::try_to_lock};
+    if (!lock.owns_lock())
+      return std::nullopt;
+
+    return std::invoke(std::forward<F>(f), mValue);
+  }
+
+  template <typename F>
+  std::optional<std::invoke_result_t<F, Value>> try_with_lock(F &&f) const {
+    std::unique_lock lock{mMutex, std::try_to_lock};
+    if (!lock.owns_lock())
+      return std::nullopt;
+
     return std::invoke(std::forward<F>(f), mValue);
   }
 

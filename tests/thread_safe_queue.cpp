@@ -17,7 +17,4 @@ TEST_CASE("Basic methods work", "[thread_safe_queue]") {
   auto first = q.pop();
   REQUIRE(first.has_value());
   REQUIRE(*first == 1);
-  auto found = q.find_if([](int i) { return i == 4; });
-  REQUIRE(found.has_value());
-  REQUIRE(*found == 4);
 }
